@@ -1,0 +1,75 @@
+sudo apt-get install vim
+sudo apt install git bc bison flex libssl-dev make
+cd /usr/src
+#커널소스 다운#
+sudo git clone --depth=1 https://github.com/raspberrypi/linux.git
+#툴체인 다운#
+sudo git clone https://github.com/raspberrypi/tools ~/tool
+#그래픽 지원을 위한 다운로드#
+sudo apt-get install make ncurses-dev build-essential
+#환경설정#
+cd linux
+KERNEL=kernel7
+sudo make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bcm2709_defconfig
+#커널소스 컴파일#
+sudo make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- zimage modules dtbs -j4
+sudo make modules_install
+sudo cp arch/arm/boot/dts/overlays/*.dtb* /boot/overlays/
+sudo cp arch/arm/boot/dts/overlays/README /boot/overlays/
+sudo cp arch/arm/boot/zImage /boot/$KERNEL.img
+sudo apt-get update
+
+git clone git://git.drogon.net/wiringPi
+cd wiringPi
+./build
+sudo raspi-config
+
+sudo apt-get install -y git-core
+sudo apt-get install -y build-essential
+sudo apt-get install -y git
+sudo apt-get install -y cmake
+sudo apt-get install -y libusb-1.0-0-dev
+sudo apt-get install -y libgtk-3-dev
+sudo apt-get install -y libglfw3-dev
+sudo apt-get install -y libgles2-mesa-dev
+sudo apt-get install -y libdrm-dev
+sudo apt-get install -y libdrm2
+sudo apt-get install -y libegl1-mesa-dev
+sudo apt-get install -y libegl1-mesa
+sudo apt-get install -y libegl1-mesa-drivers
+sudo apt-get install -y libgles2-mesa
+sudo apt-get install -y libudev-dev
+sudo apt-get install -y libvl53l0x-dev
+sudo apt-get install -y libmpsse-dev
+sudo apt-get install -y libftdi-dev
+sudo apt-get install -y libhidapi-dev
+sudo apt-get install -y libwiringpi-dev
+sudo apt-get install -y libpigpio-dev
+sudo apt-get install -y libcap-dev
+sudo apt-get install -y libncurses-dev
+sudo apt-get install -y libncurses5-dev
+sudo apt-get install -y libncursesw5-dev
+sudo apt-get install -y libncurses6-dev
+sudo apt-get install -y libncursesw6-dev
+sudo apt-get install -y libncursesw6
+sudo apt-get install -y libncurses5
+sudo apt-get install -y libncurses6
+sudo apt-get install -y libncursesw6
+sudo apt-get install -y libncurses5-dev
+sudo apt-get install -y libncursesw5-dev
+sudo apt-get install -y libncurses6-dev
+sudo apt-get install -y libncursesw6-dev
+sudo apt-get install -y libncursesw6
+sudo apt-get install -y libncurses5
+sudo apt-get install -y libncurses6
+sudo apt-get install -y libncursesw6
+sudo apt-get install -y libncurses5-dev
+sudo apt-get install -y libncursesw5-dev
+sudo apt-get install -y libncurses6-dev
+sudo apt-get install -y libncursesw6-dev
+sudo apt-get install -y libncursesw6
+sudo apt-get install -y libncurses5
+sudo apt-get install -y libncurses6
+sudo apt-get install -y libncursesw6
+sudo apt-get install -y libncurses5-dev
+sudo apt
