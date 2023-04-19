@@ -106,30 +106,37 @@ static uint32_t read_gyroscope(void)                          //reading gyroscop
 
 static ssize_t read_driver(struct file *File, char __user *user_buffer, size_t count, loff_t *offs)  //read function of file
 {
- int to_copy, not_copied, delta;
- char out_string[100];                // declaring no of characters to get printed
- int16_t accel_x,accel_y,accel_z;
- int16_t x_gyro,y_gyro,z_gyro;
- int32_t k,k1;
+    //int to_copy, not_copied, delta;
+    //char out_string[100];
+    //to_copy = min(sizeof(out_string), count);
+    //snprintf(out_string, sizeof(out_string), "accel_readings:x:%d,y:%d,z:%d,Gyro_readings:x:%d,y:%d,z:%d,\n",accel.x,accel.y,accel.z,gyro.x,gyro.y,gyro.z);
+   // not_copied = copy_to_user(user_buffer, out_string, to_copy);
+    //delta = to_copy - not_copied;
+    //return delta;
+	int to_copy, not_copied, delta;
+	char out_string[100];                // declaring no of characters to get printed
+	int16_t accel_x,accel_y,accel_z;
+	int16_t x_gyro,y_gyro,z_gyro;
+	int32_t k,k1;
 
- to_copy = min(sizeof(out_string), count);
+	to_copy = min(sizeof(out_string), count);
 
- k=read_accelerometer();             // Reading accelerometer values
- accel_x = accel.x;
- accel_y = accel.y;
- accel_z = accel.z;
- 
- k1=read_gyroscope();              // Reading gyroscope values
- x_gyro = gyro.x;
- y_gyro = gyro.y;
- z_gyro = gyro.z;
+	k=read_accelerometer();             // Reading accelerometer values
+	accel_x = accel.x;
+	accel_y = accel.y;
+	accel_z = accel.z;
 
- snprintf(out_string, sizeof(out_string), "accel_readings:x:%d,y:%d,z:%d,Gyro_readings:x:%d,y:%d,z:%d,\n",accel_x,accel_y,accel_z,x_gyro,y_gyro,z_gyro);
- not_copied = copy_to_user(user_buffer, out_string, to_copy);
+	k1=read_gyroscope();              // Reading gyroscope values
+	x_gyro = gyro.x;
+	y_gyro = gyro.y;
+	z_gyro = gyro.z;
 
- delta = to_copy - not_copied;
+	snprintf(out_string, sizeof(out_string), "accel_readings:x:%d,y:%d,z:%d,Gyro_readings:x:%d,y:%d,z:%d,\n",accel_x,accel_y,accel_z,x_gyro,y_gyro,z_gyro);
+	not_copied = copy_to_user(user_buffer, out_string, to_copy);
 
- return delta;
+	delta = to_copy - not_copied;
+
+	return delta;
 }
 
 ///////////////// IOCTL FUNCTION /////////////////////////////////////

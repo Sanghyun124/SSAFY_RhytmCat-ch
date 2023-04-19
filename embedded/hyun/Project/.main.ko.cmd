@@ -1,0 +1,1 @@
+cmd_/home/pi/G547/Project/main.ko := ld -r -EL -z noexecstack --build-id=sha1  -T scripts/module.lds -o /home/pi/G547/Project/main.ko /home/pi/G547/Project/main.o /home/pi/G547/Project/main.mod.o;  true
