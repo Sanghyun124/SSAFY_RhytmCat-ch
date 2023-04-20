@@ -73,7 +73,5 @@ sudo apt-get install -y libncurses5
 sudo apt-get install -y libncurses6
 sudo apt-get install -y libncursesw6
 sudo apt-get install -y libncurses5-dev
-sudo apt
-=======
-5.15.84-v7l+
->>>>>>> df48e7926bcb81085404f44e1a9541133ec4841d
+
+
