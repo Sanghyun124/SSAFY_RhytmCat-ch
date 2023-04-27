@@ -87,3 +87,12 @@ git checkout rpi-6.1.y
 make mrproper
 make ARCH=arm64 bcm2711_defconfig
 sudo make ARCH=arm64 headers_install INSTALL_HDR_PATH=/usr/src/linux-headers-$(uname -r)
+
+
+5.15.92-v7l+
+git clone ~~
+git checkout 5. 
+sudo apt-get update
+sudo apt install git bc bison flex libssl-dev make vim gcc
+sudo apt-get install build-essential
+sudo apt-get install raspberrypi-kernel-headers
