@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include "mpu6050_driver.h"
 
-#define DEVICE_FILE "/dev/mpu6050"
+#define DEVICE_FILE "/dev/mpu6050_device"
 
 int main()
 {

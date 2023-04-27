@@ -74,4 +74,16 @@ sudo apt-get install -y libncurses6
 sudo apt-get install -y libncursesw6
 sudo apt-get install -y libncurses5-dev
 
+헤더 파일 설치
+sudo apt-get install raspberrypi-kernel-headers
+심볼릭 링크/확인
+sudo ln -s /usr/src/linux-headers-$(uname -r) /lib/modules/$(uname -r)/build
+ls -l /lib/modules/$(uname -r)/build
 
+커널 버전에 맞는 커널헤더파일 설치
+cd ~
+cd linux
+git checkout rpi-6.1.y
+make mrproper
+make ARCH=arm64 bcm2711_defconfig
+sudo make ARCH=arm64 headers_install INSTALL_HDR_PATH=/usr/src/linux-headers-$(uname -r)
