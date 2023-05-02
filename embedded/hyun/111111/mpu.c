@@ -7,9 +7,11 @@
 #include <linux/of.h>
 #include <linux/of_device.h>
 #include <linux/i2c-dev.h>
+
 #define DEVICE_NAME "mpu6050_device"
 #define CLASS_NAME "mpu6050_class"
 #define MPU6050_I2C_ADDRESS 0x68
+#define MPU6050_PWR_MGMT_1 0x6B
 
 static int major_number;
 static struct class *mpu6050_class;
@@ -24,12 +26,19 @@ static int mpu6050_open(struct inode *inode, struct file *file)
 
 static int mpu6050_read_data(int reg)
 {
-    return i2c_smbus_read_byte_data(mpu6050_client, reg);
+    int error = i2c_smbus_read_word_data(mpu6050_client, reg);
+
+    if (error < 0) {
+        printk(KERN_ERR "mpu6050: failed to read data\n");
+        return error;
+    }
+
+    return ((error << 8) & 0xFF00) | ((error >> 8) & 0x00FF);
 }
 
 static ssize_t mpu6050_read(struct file *file, char __user *buf, size_t count, loff_t *ppos)
 {
-    char data[14];
+    int16_t data[7];
     int i, error;
 
     if (count < 14) 
@@ -37,18 +46,17 @@ static ssize_t mpu6050_read(struct file *file, char __user *buf, size_t count, l
         return -EINVAL;
     }
 
-    for (i = 0; i < 14; i++) {
-        error = mpu6050_read_data(0x3B + i);
-        int a = 0x3B + i;
-        printk(KERN_INFO "llll %x llll %d : %d\n",a,i, error);
+    for (i = 0; i < 7; i++) {
+        error = mpu6050_read_data(0x3B + (i * 2));
         if (error < 0) {
-            printk(KERN_ERR "mpu6050: failed to read data\n");
             return error;
         }
         data[i] = error;
     }
+    printk(KERN_INFO "kernel mpu6050: Acceleration: X = %d, Y = %d, Z = %d\n", data[0], data[1], data[2]);
+    printk(KERN_INFO "kernel mpu6050: Gyroscope: X = %d, Y = %d, Z = %d\n", data[4], data[5], data[6]);
 
-    if (copy_to_user(buf, data, 14)) { // count?? 14?? ????
+    if (copy_to_user(buf, data, 14)) {
         return -EFAULT;
     }
 
@@ -61,16 +69,41 @@ static struct file_operations fops = {
     .read = mpu6050_read,
 };
 
-static int __init mpu6050_init( )
+static int mpu6050_init_sensor(void)
+{
+    int error;
+
+    // Reset the device and wait for 100ms
+    error = i2c_smbus_write_byte_data(mpu6050_client, MPU6050_PWR_MGMT_1, 0x80);
+    if (error < 0) {
+        printk(KERN_ERR "mpu6050: failed to reset the device\n");
+        return error;
+    }
+    msleep(100);
+
+    // Wake up the device and set the clock source
+    error = i2c_smbus_write_byte_data(mpu6050_client, MPU6050_PWR_MGMT_1, 0x00);
+    if (error < 0) {
+        printk(KERN_ERR "mpu6050: failed to wake up the device\n");
+        return error;
+    }
+
+    // Configure gyro and accelerometer ranges, sample rates, etc.
+    // ...
+
+    return 0;
+}
+
+static int __init mpu6050_init(void)
 {
     struct i2c_adapter *adapter;
     struct i2c_board_info board_info = {
         .type = "mpu6050",
         .addr = MPU6050_I2C_ADDRESS,
     };
-    
+
     major_number = register_chrdev(0, DEVICE_NAME, &fops);
-    printk(KERN_INFO "__init: mpu6050 driver loaded\n");
+        printk(KERN_INFO "__init: mpu6050 driver loaded\n");
     if (major_number < 0) {
         printk(KERN_ALERT "mpu6050: failed to register a major number\n");
         return major_number;
@@ -84,7 +117,7 @@ static int __init mpu6050_init( )
     }
 
     mpu6050_device = device_create(mpu6050_class, NULL, MKDEV(major_number, 0), NULL, DEVICE_NAME);
-        if (IS_ERR(mpu6050_device)) {
+    if (IS_ERR(mpu6050_device)) {
         class_destroy(mpu6050_class);
         unregister_chrdev(major_number, DEVICE_NAME);
         printk(KERN_ALERT "mpu6050: failed to create a device\n");
@@ -103,7 +136,13 @@ static int __init mpu6050_init( )
         return -ENODEV;
     }
 
+    if (mpu6050_init_sensor() < 0) {
+        printk(KERN_ERR "mpu6050: failed to initialize the sensor\n");
+        return -ENODEV;
+    }
+
     return 0;
+
 }
 
 static void __exit mpu6050_exit(void)

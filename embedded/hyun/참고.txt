@@ -1,3 +1,4 @@
 https://www.youtube.com/watch?v=CtbSmEclpjY / 디바이스 드라이버 유튜브 영상
 https://github.com/h20201400219/G547/tree/40d879434836d9e97b5626ddfa0fc89e6942a97e/Project / mpu6050 github
 https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=kchldydtjr&logNo=221930796191 / flex + mcp3008
+https://wikidocs.net/3243 / 커널빌드
