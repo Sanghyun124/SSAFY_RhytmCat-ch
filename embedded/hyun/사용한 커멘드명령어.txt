@@ -90,12 +90,12 @@ sudo make ARCH=arm64 headers_install INSTALL_HDR_PATH=/usr/src/linux-headers-$(u
 
 
 5.15.92-v7l+
-git clone ~~
-git checkout 5. 
 sudo apt-get update
-sudo apt install git bc bison flex libssl-dev make vim gcc
+sudo apt install git bc bison flex libssl-dev make vim gccz
 sudo apt-get install build-essential
 sudo apt-get install raspberrypi-kernel-headers
+git clone --depth=1 --branch rpi-5.1.y https://github.com/raspberrypi/linux
+git checkout rpi-5.1.y
 KERNEL=kernel
 make bcmrpi_defconfig
 make -j4 zImage modules dtbs
