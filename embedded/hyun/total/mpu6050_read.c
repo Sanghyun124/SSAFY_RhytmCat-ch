@@ -13,12 +13,11 @@
 
 #define SPI_CHANNEL 0
 #define SPI_SPEED 1000000
-#define F0_LIMIT 440
-#define F1_LIMIT 300
-#define F2_LIMIT 280
-#define F3_LIMIT 350
-#define F4_LIMIT 330
-#define FORCE_LIMIT 500
+#define F1_LIMIT 155
+#define F2_LIMIT 170
+#define F4_LIMIT 195
+#define F5_LIMIT 137
+#define FORCE_LIMIT 1000
 
 void error_handling(const char *message);
 
@@ -41,31 +40,31 @@ int read_mcp3008_adc(unsigned char adcChannel)
 char* hand_mode(int f0,int f1,int f2,int f3, int f4, int f5, int f6, int f7){
         // receive(1)
 	if (f6 > FORCE_LIMIT) {
-		return "1";
+		return "recv";
 	}
 	// bat(2)
-	if (f7 > FORCE_LIMIT) {
-		return "2";
+	if (f0 > FORCE_LIMIT) {
+		return "bat";
 	}
 	// rock(3)
-	if (f0 > F0_LIMIT && f1 > F1_LIMIT && f2 > F2_LIMIT && f3 > F3_LIMIT && f4 > F4_LIMIT) {
-		return "3";
+	if (f1 > F1_LIMIT && f2 > F2_LIMIT && f4 > F4_LIMIT && f5 > F5_LIMIT && f7 > FORCE_LIMIT) {
+		return "rock";
 	}
-	// thumb up(4)
-	if (f0 > F0_LIMIT && f1 > F1_LIMIT && f2 > F2_LIMIT && f3 > F3_LIMIT && f4 < F4_LIMIT) {
-		return "4";
+	// jjang(4)
+	if (f1 > F1_LIMIT && f2 > F2_LIMIT && f4 > F4_LIMIT && f5 < F5_LIMIT) {
+		return "jjang";
 	}
-	// glove(5)
-	if (f0 < F0_LIMIT && f1 > F1_LIMIT && f2 < F2_LIMIT && f3 < F3_LIMIT && f4 < F4_LIMIT) {
-		return "5";
+	// bunt(5)
+	if (f1 > F1_LIMIT && f2 > F2_LIMIT && f4 < F4_LIMIT && f5 < F5_LIMIT) {
+		return "bunt";
 	}
-	// knife(6)
-	if (f0 < F0_LIMIT && f1 < F1_LIMIT && f2 < F2_LIMIT && f3 < F3_LIMIT && f4 > F4_LIMIT) {
-		return "6";
+	// sword(6)
+	if (f1 < F1_LIMIT && f2 < F2_LIMIT && f4 < F4_LIMIT && f5 > F5_LIMIT) {
+		return "sword";
 	}
 	// spike(7)
-	if (f0 < F0_LIMIT && f1 < F1_LIMIT && f2 < F2_LIMIT && f3 < F3_LIMIT && f4 < F4_LIMIT) {
-		return "7";
+	if (f1 < F1_LIMIT && f2 < F2_LIMIT && f4 < F4_LIMIT && f5 < F5_LIMIT) {
+		return "spike";
 	}
 	else {
 		return "hu gu deong !";
@@ -108,7 +107,7 @@ int main(int argc, char *argv[])
     serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
     serv_addr.sin_port = htons(30020);
     
-    // bing error
+    // bind error
     if (bind(serv_sock, (struct sockaddr*) &serv_addr, sizeof(serv_addr)) == -1 )
         error_handling("bind() error"); 
     
@@ -165,13 +164,13 @@ int main(int argc, char *argv[])
             printf("Gyroscope: X = %d, Y = %d, Z = %d\n", gx, gy, gz);
 	    printf("Hand_Mode\n0 : %d\n1 : %d\n2 : %d\n3 : %d\n4 : %d\n5 : %d\n6 : %d\n7 : %d\n", flexValue0, flexValue1, flexValue2, flexValue3, flexValue4, forceValue5, forceValue6, forceValue7);
             write(clnt_sock, pSend_buffer, strlen(pSend_buffer));
-            printf("%c, %c\n", pSend_buffer[0], pSend_buffer[1]);
+            printf("%s\n", pSend_buffer);
             b++;
         /*if(b > 10){
             write(clnt_sock, end_buffer, strlen(end_buffer));
             break;
         }*/
-            sleep(1);
+            usleep(250000);
     }
     close(clnt_sock);    
     close(serv_sock);

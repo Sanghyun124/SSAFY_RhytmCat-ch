@@ -9,7 +9,7 @@
 #include <linux/i2c-dev.h>
 
 #define DEVICE_NAME "mpu6050_device"
-#define CLASS_NAME "unique_mpu6050_class"
+#define CLASS_NAME "unique_smartglove_class"
 #define MPU6050_I2C_ADDRESS 0x68
 #define MPU6050_PWR_MGMT_1 0x6B
 
@@ -53,9 +53,9 @@ static ssize_t mpu6050_read(struct file *file, char __user *buf, size_t count, l
         }
         data[i] = error;
     }
-    
     printk(KERN_INFO "kernel mpu6050: Acceleration: X = %d, Y = %d, Z = %d\n", data[0], data[1], data[2]);
     printk(KERN_INFO "kernel mpu6050: Gyroscope: X = %d, Y = %d, Z = %d\n", data[4], data[5], data[6]);
+    
     if (copy_to_user(buf, data, 14)) {
         return -EFAULT;
     }

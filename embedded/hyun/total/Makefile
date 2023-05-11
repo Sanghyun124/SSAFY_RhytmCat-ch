@@ -1,4 +1,4 @@
-obj-m += mpu.o
+obj-m += smartglove.o
 
 KERNELDIR ?= /lib/modules/$(shell uname -r)/build
 PWD := $(shell pwd)
