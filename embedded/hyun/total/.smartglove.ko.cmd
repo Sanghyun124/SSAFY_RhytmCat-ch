@@ -1,0 +1,1 @@
+cmd_/home/pi/111111/smartglove.ko := ld -r -EL -z noexecstack --build-id=sha1  -T scripts/module.lds -o /home/pi/111111/smartglove.ko /home/pi/111111/smartglove.o /home/pi/111111/smartglove.mod.o;  true
