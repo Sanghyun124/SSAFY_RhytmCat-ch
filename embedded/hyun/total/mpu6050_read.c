@@ -85,6 +85,11 @@ char* check_ok(int f7){
 
 int main(int argc, char *argv[])
 {
+    
+    int16_t ax, ay, az, gx, gy, gz;
+    
+
+    
     // Initialize wiringPi and SPI
     if (wiringPiSetup() == -1 || wiringPiSPISetup(SPI_CHANNEL, SPI_SPEED) == -1)
     {
@@ -95,7 +100,7 @@ int main(int argc, char *argv[])
     // MPU6050 initialization
     int mpu6050_fd;
     char mpu6050_data[14];
-    int16_t ax, ay, az, gx, gy, gz;
+    
     struct timespec sleep_time;
 
     mpu6050_fd = open("/dev/mpu6050_device", O_RDONLY);
@@ -139,7 +144,7 @@ int main(int argc, char *argv[])
     char* ok_buffer;
     char* pSend_buffer;
     char data_buffer[30] ;
-    int b = 0;
+    char recv_buffer[100];
     int flexValue0 = 0;
     int flexValue1 = 0;
     int flexValue2 = 0;
@@ -170,6 +175,7 @@ int main(int argc, char *argv[])
         gx = (int16_t)((mpu6050_data[8] << 8) | mpu6050_data[9]);
         gy = (int16_t)((mpu6050_data[10] << 8) | mpu6050_data[11]);
         gz = (int16_t)((mpu6050_data[12] << 8) | mpu6050_data[13]);
+
         pSend_buffer = hand_mode(flexValue0, flexValue1, flexValue2, flexValue3, flexValue4, forceValue5, forceValue6, forceValue7);
 	ok_buffer = check_ok(forceValue7);
         printf("Acceleration: X = %d, Y = %d, Z = %d\n", ax, ay, az);
@@ -177,13 +183,33 @@ int main(int argc, char *argv[])
 	printf("Hand_Mode\n0 : %d\n1 : %d\n2 : %d\n3 : %d\n4 : %d\n5 : %d\n6 : %d\n7 : %d\n", flexValue0, flexValue1, flexValue2, flexValue3, flexValue4, forceValue5, forceValue6, forceValue7);
 	strcpy(data_buffer, pSend_buffer);
 	strcat(data_buffer, ok_buffer);
-        write(clnt_sock, pSend_buffer, strlen(pSend_buffer));
-        printf("%s\n", data_buffer);
-        b++;
-        /*if(b > 10){
-            write(clnt_sock, end_buffer, strlen(end_buffer));
-            break;
-        }*/
+        int w = send(clnt_sock, data_buffer, strlen(data_buffer),MSG_NOSIGNAL);
+        if(w==-1){
+              close(clnt_sock);  // Close the old client socket
+          
+              // accept error
+              socklen_t clnt_addr_size = sizeof(serv_addr);
+              clnt_sock = accept(serv_sock, (struct sockaddr*)&serv_addr, &clnt_addr_size);  // Note that we're not re-declaring clnt_sock here
+              if (clnt_sock == -1)
+                  error_handling("accept() error");  
+          
+              char message[] = "Hello UE!";
+              write(clnt_sock, message, sizeof(message));
+          }
+        int r = recv(clnt_sock,recv_buffer,99,MSG_NOSIGNAL);
+        if (r==-1){
+              close(clnt_sock);  // Close the old client socket
+          
+              // accept error
+              socklen_t clnt_addr_size = sizeof(serv_addr);
+              clnt_sock = accept(serv_sock, (struct sockaddr*)&serv_addr, &clnt_addr_size);  // Note that we're not re-declaring clnt_sock here
+              if (clnt_sock == -1)
+                  error_handling("accept() error");  
+          
+              char message[] = "Hello UE!";
+              write(clnt_sock, message, sizeof(message));
+          }
+        printf("data : %s | recv : %s\n", data_buffer,recv_buffer);
         usleep(500000);
     }
     close(clnt_sock);    

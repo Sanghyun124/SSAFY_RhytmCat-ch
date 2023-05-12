@@ -162,4 +162,3 @@ MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Your Name");
 MODULE_DESCRIPTION("A simple Linux char driver for the MPU6050");
 MODULE_VERSION("0.1");
-
