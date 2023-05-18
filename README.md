@@ -1,4 +1,3 @@
-# README.md
 
 # 리듬 캣치 (자체제작 컨트롤러와 함께 즐기는 언리얼 엔진 기반 VR 리듬게임)
 
@@ -28,7 +27,7 @@
 
 ### 로비
 
-![로비.PNG](images/로비.png)
+![로비.PNG](images/%EB%A1%9C%EB%B9%84.PNG)
 
 ## HOW TO
 
@@ -36,27 +35,27 @@
 
 ### 해변맵
 
-![해변.PNG](images/해변.png)
+![해변.PNG](images/%ED%95%B4%EB%B3%80.PNG)
 ![배구시연.gif](images/%EB%B0%B0%EA%B5%AC%EC%8B%9C%EC%97%B0.gif)
 
 ### 숲맵
 
-![숲.PNG](images/숲.png)
+![숲.PNG](images/%EC%88%B2.PNG)
 ![모기시연.gif](images/%EB%AA%A8%EA%B8%B0%EC%8B%9C%EC%97%B0.gif)
 
 ### 과일맵
 
-![과일.PNG](images/과일.png)
+![과일.PNG](images/%EA%B3%BC%EC%9D%BC.PNG)
 ![과일시연.gif](images/%EA%B3%BC%EC%9D%BC%EC%8B%9C%EC%97%B0.gif)
 
 ### 야구맵
 
-![야구.PNG](images/야구.png)
+![야구.PNG](images/%EC%95%BC%EA%B5%AC.PNG)
 ![야구.gif](images/%EC%95%BC%EA%B5%AC%EC%8B%9C%EC%97%B0.gif)
 
 ### 리믹스맵
 
-![리믹스.PNG](images/리믹스.png)
+![리믹스.PNG](images/%EB%A6%AC%EB%AF%B9%EC%8A%A4.PNG)
 ![리믹스시연.gif](images/%EB%A6%AC%EB%AF%B9%EC%8A%A4%EC%8B%9C%EC%97%B0.gif)
 
 ### 스마트 글러브
